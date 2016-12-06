@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Home</title>
+ <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.1/sockjs.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-cookies.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+<script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="Blogcontroller.js"></script>
+<script type="text/javascript" src="Forumcontroller.js"></script>
+<script type="text/javascript" src="Registercontroller.js"></script>
+<script type="text/javascript" src="Logincontroller.js"></script>
+<script type="text/javascript" src="loginService.js"></script>
+<script type="text/javascript" src="Chatcontroller.js"></script>
+<script type="text/javascript" src="chatservice.js"></script>
+<script type="text/javascript" src="jobctrl.js"></script>
+<script type="text/javascript" src="forumcomment.js"></script>
+<script>
+var app = angular.module("collab", ["ngRoute","ngCookies","blogApp","forumApp","registerApp","app","jobapp","fcapp"])
+.run(run);
+app.config(function($routeProvider) {
+	$routeProvider
+		.when('/blog', {
+			templateUrl: 'Blog.jsp',
+			controller: 'BlogController'
+		})
+		.when('/home',{
+			templateUrl:'home.html',
+			controller: 'LoginController',
+			controllerAs: 'vm'
+		})
+		.when('/forum', {
+			templateUrl: 'Forum.jsp',
+			controller: 'ForumController'
+		})
+		.when('/user', {			
+			templateUrl: 'Register.jsp',
+			controller: 'RegisterController'
+		})
+		.when("/login",{
+	templateUrl:"login.html",
+	controller:'LoginController',
+controllerAs:'vm'
+})
+.when("/chat",{
+	templateUrl: "Chat.html",
+	controller: "chatController",
+})
+.when("/findjobs",{
+	templateUrl:"ViewJob.html",
+	controller:"jobctrl"
+})
+.when("/individualforum",{
+	templateUrl:"Individualforum.html",
+    controller:"commentctrl"
+})
+/* .when("/friends",{
+	templateUrl:"friend.html",
+	controller:"friendctrl"
+}) */
+});
+run.$inject = ['$rootScope', '$location', '$cookieStore', '$http'];
+function run($rootScope, $location, $cookieStore, $http) {
+// keep user logged in after page refresh
+$rootScope.globals = $cookieStore.get('globals') || {};
+if ($rootScope.globals.currentUser) {
+    $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
+}
+
+$rootScope.$on('$locationChangeStart', function (event, next, current) {
+    // redirect to login page if not logged in and trying to access a restricted page
+    var restrictedPage = $.inArray($location.path(), ['/login', '/user','/home']) === -1;
+    var loggedIn = $rootScope.globals.currentUser;
+    if (restrictedPage && !loggedIn) {
+        $location.path('/login');
+    }
+});
+}
+</script>
+</head>
+<body data-ng-app="collab">
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+<li><a href="#blog">Blog</a></li>
+<li><a href="#forum">Forum</a></li>
+<li><a href="#home">Home</a></li>
+<li><a href="#chat">Chat</a></li>
+<li><a href="#findjobs">Jobs</a></li>
+<li><a href="#friends">Friends</a></li>
+    </ul>
+     <ul class="nav navbar-nav navbar-right">
+        <li><a href="#user"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li><a href="#login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      </ul>
+  </div>
+</nav>
+<div data-ng-view></div>
+</body>
+</html>
