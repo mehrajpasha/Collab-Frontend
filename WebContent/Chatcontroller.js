@@ -1,5 +1,6 @@
 console.log("app")
-app.controller("chatController",function($scope,ChatService){
+var chatapp = angular.module('Chatapp',[]);
+chatapp.controller("chatController",function($scope,ChatService){
 	console.log("chatctrl")
 	$scope.messages=[];
 	$scope.message="";

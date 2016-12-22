@@ -34,5 +34,37 @@ RegisterApp.controller('RegisterController', [ '$scope', '$http',
 			};
 		    
 
+		$scope.currentuser=function(){
+			
+			console.log("oneuser")
+			$http({
+				method:'GET',
+				url:'http://localhost:8083/Collbrationproj/oneuser'
+			}).success(function(data,status,headers,config){
+				$scope.oneuser=data;
+				$scope.img = data.image
+			})
+		};
+		$scope.uploadFile = function(files) {
+		    var image = new FormData();
+		    //Take the first selected file
+		    image.append("file", files[0]);
+
+		    $http.post('http://localhost:8083/Collbrationproj/imageUpload', image, {
+		        withCredentials: true,
+		        headers: {'Content-Type': undefined },
+		        transformRequest: angular.identity
+		    }).success(function(data, status, headers, config) {
+				alert("success")
+				 $scope.reloadPage = function()                                                
+	                   {
+	                     $window.location.reload();
+	                   }
+				console.log(image)
+			}).error(function(data, status, headers, config) {
+				alert("error")
+			});
+
+		};
         
 		} ]);

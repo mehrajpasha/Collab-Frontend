@@ -19,14 +19,16 @@
 <script type="text/javascript" src="Blogcontroller.js"></script>
 <script type="text/javascript" src="Forumcontroller.js"></script>
 <script type="text/javascript" src="Registercontroller.js"></script>
-<script type="text/javascript" src="Logincontroller.js"></script>
+<script type="text/javascript" src="loginctrl.js"></script>
 <script type="text/javascript" src="loginService.js"></script>
 <script type="text/javascript" src="Chatcontroller.js"></script>
 <script type="text/javascript" src="chatservice.js"></script>
 <script type="text/javascript" src="jobctrl.js"></script>
 <script type="text/javascript" src="forumcomment.js"></script>
+<script type="text/javascript" src="allUsersCtrl.js"></script>
+<script type="text/javascript" src="myfriendsctrl.js"></script>
 <script>
-var app = angular.module("collab", ["ngRoute","ngCookies","blogApp","forumApp","registerApp","app","jobapp","fcapp"])
+var app = angular.module("collab", ["ngRoute","ngCookies","blogApp","forumApp","registerApp","app","jobapp","Chatapp"])
 .run(run);
 app.config(function($routeProvider) {
 	$routeProvider
@@ -64,10 +66,14 @@ controllerAs:'vm'
 	templateUrl:"Individualforum.html",
     controller:"commentctrl"
 })
-/* .when("/friends",{
-	templateUrl:"friend.html",
-	controller:"friendctrl"
-}) */
+ .when("/myprofile",{
+    	templateUrl: "UserProfile.html",
+    	controller: "RegisterController"
+    })
+.when("/users",{
+    	templateUrl: "AllUsers.html",
+    	controller:"alluserctrl"
+});
 });
 run.$inject = ['$rootScope', '$location', '$cookieStore', '$http'];
 function run($rootScope, $location, $cookieStore, $http) {
@@ -97,7 +103,8 @@ $rootScope.$on('$locationChangeStart', function (event, next, current) {
 <li><a href="#home">Home</a></li>
 <li><a href="#chat">Chat</a></li>
 <li><a href="#findjobs">Jobs</a></li>
-<li><a href="#friends">Friends</a></li>
+<li><a href="#users">Find Friends</a></li>
+<li><a href="#myprofile">My Profile</a>
     </ul>
      <ul class="nav navbar-nav navbar-right">
         <li><a href="#user"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
